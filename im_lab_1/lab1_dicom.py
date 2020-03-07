@@ -37,6 +37,7 @@ class MainWindow:
         self.array = self.transformData(self.data, self.winWidth, self.winCenter)
         # self.array = self.data
         self.image = Image.fromarray(self.array)
+        self.image_size = self.image.size
         self.image = self.image.resize((512, 512), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(image=self.image, master=root)
         self.image_on_canvas = self.canvas.create_image(0, 0, anchor=NW, image=self.img)
@@ -82,9 +83,9 @@ class MainWindow:
 
     def finishMeasure(self, event):
         # print measured length in mm
-        x_diff = (event.x - self.start_line_mouse_pos[0]) * self.pixelSpacing[1]
-        y_diff = (event.y - self.start_line_mouse_pos[1]) * self.pixelSpacing[0]
-        dist = sqrt(x_diff**2 + y_diff**2)
+        x_diff = (event.x - self.start_line_mouse_pos[0]) * self.pixelSpacing[1] / (512 / self.image_size[0])
+        y_diff = (event.y - self.start_line_mouse_pos[1]) * self.pixelSpacing[0] / (512 / self.image_size[1])
+        dist = sqrt(x_diff ** 2 + y_diff ** 2)
         print("Distance is: " + str(dist) + "mm")
         # print("x: " + str(event.x) + " y: " + str(event.y))
 

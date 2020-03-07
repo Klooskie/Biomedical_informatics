@@ -29,7 +29,7 @@ print(peaksAll)
 R_peaks = list(filter(lambda x: ecg[x] > 0.3, peaksAll))
 time_interval = (R_peaks[-1] - R_peaks[0]) / (60 * sampling_frequency)
 R_peaks_in_time_interval = len(R_peaks) - 1
-average_heart_rate =  R_peaks_in_time_interval / time_interval
+average_heart_rate = R_peaks_in_time_interval / time_interval
 print("Average heart rate is:", average_heart_rate)
 
 peaks_pairs_time_intervals = np.diff(R_peaks) / (60 * sampling_frequency)
@@ -50,12 +50,12 @@ t_peaks = peaksPRT[r_peaks_indices + 1]
 peaksPRT = np.concatenate([p_peaks, r_peaks, t_peaks])
 
 # plot heart rate
-plt.figure(figsize=(15,8))
+plt.figure(figsize=(15, 8))
 plt.plot(tmp_heart_rates)
 plt.show()
 
 # plot ECG
-plt.figure(figsize=(15,8))
+plt.figure(figsize=(15, 8))
 plt.plot(ecg, '#999999')
 # plt.plot(peaksAll, ecg[peaksAll], "rx")
 # plot PRT peaks
@@ -64,3 +64,14 @@ plt.plot(peaksPRT, ecg_filt[peaksPRT], "rx")
 plt.show()
 
 
+# plot PRT on non filtered signal
+def find_nearest_value(array, value):
+    index = (np.abs(array - value)).argmin()
+    return array[index]
+
+
+proper_PRT_peaks = [find_nearest_value(peaksAll, peak) for peak in peaksPRT + window_size / 2]
+plt.figure(figsize=(15, 8))
+plt.plot(ecg, 'g')
+plt.plot(proper_PRT_peaks, ecg[proper_PRT_peaks], "rx")
+plt.show()
