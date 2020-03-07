@@ -2,7 +2,7 @@
 # Lab 1 : DICOM
 
 import pydicom
-import numpy as np
+from math import sqrt
 from tkinter import *
 from PIL import Image, ImageTk
 
@@ -17,9 +17,11 @@ class MainWindow:
 
         self.winCenter = self.ds.WindowCenter
         self.winWidth = self.ds.WindowWidth
+        self.pixelSpacing = self.ds.PixelSpacing
+        self.line = None
 
-        print(self.winWidth)
-        print(self.winCenter)
+        print("Window width is:", self.winWidth)
+        print("Window center is:", self.winCenter)
 
         # prepare canvas
         self.canvas = Canvas(main, width=512, height=512)
@@ -46,12 +48,11 @@ class MainWindow:
 
     def initWindow(self, event):
         # save mouse position
-        print("x: " + str(event.x) + " y: " + str(event.y))
         self.mouse_pos = event.x, event.y
+        # print("x: " + str(event.x) + " y: " + str(event.y))
 
     def updateWindow(self, event):
         # modify window width and center
-        print("x: " + str(event.x) + " y: " + str(event.y))
         self.winCenter += self.mouse_pos[1] - event.y
         self.winWidth += event.x - self.mouse_pos[0]
         self.mouse_pos = event.x, event.y
@@ -61,21 +62,31 @@ class MainWindow:
         self.image2 = self.image2.resize((512, 512), Image.ANTIALIAS)
         self.img2 = ImageTk.PhotoImage(image=self.image2, master=root)
         self.canvas.itemconfig(self.image_on_canvas, image=self.img2)
+        # print("x: " + str(event.x) + " y: " + str(event.y))
 
     def initMeasure(self, event):
-        # todo: save mouse position
-        # todo: create line
-        # hint: self.canvas.create_line(...)
-        print("x: " + str(event.x) + " y: " + str(event.y))
+        # save mouse position
+        self.start_line_mouse_pos = event.x, event.y
+        # create line
+        if self.line:
+            self.canvas.delete(self.line)
+        self.line = self.canvas.create_line(self.start_line_mouse_pos, event.x, event.y, fill='red')
+        # print("x: " + str(event.x) + " y: " + str(event.y))
 
     def updateMeasure(self, event):
-        # todo: update line
-        # hint: self.canvas.coords(...)
-        print("x: " + str(event.x) + " y: " + str(event.y))
+        # save mouse position
+        self.mouse_pos = event.x, event.y
+        # update line
+        self.canvas.coords(self.line, *self.start_line_mouse_pos, *self.mouse_pos)
+        # print("x: " + str(event.x) + " y: " + str(event.y))
 
     def finishMeasure(self, event):
-        # todo: print measured length in mm
-        print("x: " + str(event.x) + " y: " + str(event.y))
+        # print measured length in mm
+        x_diff = (event.x - self.start_line_mouse_pos[0]) * self.pixelSpacing[1]
+        y_diff = (event.y - self.start_line_mouse_pos[1]) * self.pixelSpacing[0]
+        dist = sqrt(x_diff**2 + y_diff**2)
+        print("Distance is: " + str(dist) + "mm")
+        # print("x: " + str(event.x) + " y: " + str(event.y))
 
 
 # ----------------------------------------------------------------------
