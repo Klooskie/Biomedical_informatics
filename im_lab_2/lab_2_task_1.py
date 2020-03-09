@@ -11,22 +11,23 @@ print(imageData.GetScalarRange())
 print(imageData.GetDimensions())
 # print(imageData)
 
-# counter filter
-counter_filter = vtk.vtkContourFilter()
-counter_filter.SetInputConnection(reader.GetOutputPort())
-counter_filter.SetNumberOfContours(1)
-counter_filter.SetValue(0, 100)
+# contour filter
+contour_filter = vtk.vtkContourFilter()
+contour_filter.SetInputConnection(reader.GetOutputPort())
+contour_filter.SetNumberOfContours(1)
+contour_filter.SetValue(0, 100)
 
 # mapper
 mapper = vtk.vtkPolyDataMapper()
-mapper.SetInputConnection(counter_filter.GetOutputPort())
+mapper.SetInputConnection(contour_filter.GetOutputPort())
 mapper.SetColorModeToMapScalars()
 
 # color transfer function
 ctf = vtk.vtkColorTransferFunction()
-ctf.AddRGBPoint(1, 1, 0, 0)
+ctf.AddRGBPoint(0, 1, 0, 0)
 ctf.AddRGBPoint(300, 0, 1, 0)
 ctf.AddRGBPoint(600, 0, 0, 1)
+ctf.AddRGBPoint(900, 1, 1, 1)
 mapper.SetLookupTable(ctf)
 
 # actor
@@ -56,7 +57,7 @@ class FrameCallback(object):
 
     def __call__(self, caller, ev):
         value = caller.GetSliderRepresentation().GetValue()
-        counter_filter.SetValue(0, int(value))
+        contour_filter.SetValue(0, int(value))
         self.renWin.Render()
 
 

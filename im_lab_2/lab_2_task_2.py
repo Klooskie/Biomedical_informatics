@@ -21,7 +21,7 @@ actor.SetMapper(mapper)
 
 piecewiseFunction = vtk.vtkPiecewiseFunction()
 piecewiseFunction.AddPoint(100, 0.0)
-piecewiseFunction.AddPoint(300, 0.2)
+piecewiseFunction.AddPoint(300, 0.5)
 piecewiseFunction.AddPoint(500, 0.0)
 actor.GetProperty().SetScalarOpacity(0, piecewiseFunction)
 
@@ -51,7 +51,7 @@ class FrameCallback(object):
 
         new_piecewise_function = vtk.vtkPiecewiseFunction()
         new_piecewise_function.AddPoint(int(value) - 200, 0.0)
-        new_piecewise_function.AddPoint(int(value), 0.2)
+        new_piecewise_function.AddPoint(int(value), 0.5)
         new_piecewise_function.AddPoint(int(value) + 200, 0.0)
         actor.GetProperty().SetScalarOpacity(0, new_piecewise_function)
 
@@ -66,7 +66,7 @@ sliderRep.GetPoint2Coordinate().SetValue(.9, .1)
 sliderRep.SetMinimumValue(0)
 sliderRep.SetMaximumValue(1715)
 sliderRep.SetValue(300)
-sliderRep.SetTitleText("transfer function")
+sliderRep.SetTitleText("transfer function point")
 
 slider = vtk.vtkSliderWidget()
 slider.SetInteractor(iren)
