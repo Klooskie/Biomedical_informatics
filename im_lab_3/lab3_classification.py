@@ -34,7 +34,12 @@ scores = cross_val_score(classifier, X, y, cv=5)
 acc = scores.mean()
 print('SVC acc: {0:.2f}'.format(acc))
 
-classifier = RandomForestClassifier(n_estimators=300, min_samples_split=3)
+classifier = RandomForestClassifier()
 scores = cross_val_score(classifier, X, y, cv=5)
 acc = scores.mean()
 print('RandomForestClassifier acc: {0:.2f}'.format(acc))
+
+classifier = RandomForestClassifier(n_estimators=150, min_samples_leaf=4, bootstrap=False)
+scores = cross_val_score(classifier, X, y, cv=5)
+acc = scores.mean()
+print('RandomForestClassifier tweaked acc: {0:.2f}'.format(acc))
